@@ -1,0 +1,4 @@
+name: EssKillPotionBack
+version: '${version}'
+main: marumasa.ess_kill_potion_back.minecraft
+api-version: 1.19
