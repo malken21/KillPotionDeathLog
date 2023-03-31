@@ -13,7 +13,19 @@ import org.bukkit.potion.PotionEffectType;
 public class Events implements Listener {
 
     @EventHandler
+    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
+        //ポーション
+        if (event.getItem().getItemMeta() instanceof PotionMeta potion) {
+            for (PotionEffect effect : potion.getCustomEffects())
+                if (isKillPotion(effect)) {
+                    event.getPlayer().setHealth(0);
+                }
+        }
+    }
+
+    @EventHandler
     public void onPotionSplash(PotionSplashEvent event) {
+        //スプラッシュポーション
         for (PotionEffect effect : event.getEntity().getEffects())
             if (isKillPotion(effect))
                 for (LivingEntity entity : event.getAffectedEntities()) {
@@ -23,21 +35,12 @@ public class Events implements Listener {
 
     @EventHandler
     public void onAreaEffectCloudApply(AreaEffectCloudApplyEvent event) {
+        //残留ポーション
         for (PotionEffect effect : event.getEntity().getCustomEffects())
             if (isKillPotion(effect))
                 for (LivingEntity entity : event.getAffectedEntities()) {
                     entity.setHealth(0);
                 }
-    }
-
-    @EventHandler
-    public void onPotionSplash(PlayerItemConsumeEvent event) {
-        if (event.getItem().getItemMeta() instanceof PotionMeta potion) {
-            for (PotionEffect effect : potion.getCustomEffects())
-                if (isKillPotion(effect)) {
-                    event.getPlayer().setHealth(0);
-                }
-        }
     }
 
     private static boolean isKillPotion(PotionEffect effect) {
