@@ -1,6 +1,7 @@
 package marumasa.kill_potion_death_log;
 
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
@@ -18,7 +19,9 @@ public class Events implements Listener {
         if (event.getItem().getItemMeta() instanceof PotionMeta potion) {
             for (PotionEffect effect : potion.getCustomEffects())
                 if (isKillPotion(effect)) {
-                    event.getPlayer().setHealth(0);
+                    final Player player = event.getPlayer();
+                    if (player.isDead()) return;
+                    player.setHealth(0);
                 }
         }
     }
@@ -29,6 +32,7 @@ public class Events implements Listener {
         for (PotionEffect effect : event.getEntity().getEffects())
             if (isKillPotion(effect))
                 for (LivingEntity entity : event.getAffectedEntities()) {
+                    if (entity.isDead()) return;
                     entity.setHealth(0);
                 }
     }
@@ -39,6 +43,7 @@ public class Events implements Listener {
         for (PotionEffect effect : event.getEntity().getCustomEffects())
             if (isKillPotion(effect))
                 for (LivingEntity entity : event.getAffectedEntities()) {
+                    if (entity.isDead()) return;
                     entity.setHealth(0);
                 }
     }
